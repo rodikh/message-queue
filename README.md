@@ -21,7 +21,7 @@ A real-time message queue application with a React frontend and Express backend,
 - Node.js 18+ and npm
 - An [Upstash](https://upstash.com) account (free tier available)
 
-## Setup
+## Local Development
 
 ### 1. Create an Upstash Redis Database
 
@@ -33,13 +33,6 @@ A real-time message queue application with a React frontend and Express backend,
 
 Create a `.env` file in the `packages/backend` directory:
 
-```bash
-cd packages/backend
-cp .env.example .env  # Or create manually
-```
-
-Edit the `.env` file:
-
 ```env
 UPSTASH_REDIS_REST_URL=https://your-redis-url.upstash.io
 UPSTASH_REDIS_REST_TOKEN=your-token-here
@@ -48,28 +41,14 @@ PORT=3001
 
 ### 3. Install Dependencies
 
-From the project root:
-
 ```bash
 npm install
 ```
 
 ### 4. Run Development Servers
 
-Start both frontend and backend:
-
 ```bash
 npm run dev
-```
-
-Or run them separately:
-
-```bash
-# Terminal 1: Backend
-npm run dev:backend
-
-# Terminal 2: Frontend
-npm run dev:frontend
 ```
 
 The app will be available at:
@@ -78,7 +57,7 @@ The app will be available at:
 
 ## API Endpoints
 
-### POST `/api/{queue_name}`
+### POST `/api/queue/{queue_name}`
 
 Add a message to the queue.
 
@@ -105,7 +84,7 @@ Add a message to the queue.
 }
 ```
 
-### GET `/api/{queue_name}?timeout={ms}`
+### GET `/api/queue/{queue_name}?timeout={ms}`
 
 Retrieve and remove the next message from the queue.
 
@@ -127,59 +106,80 @@ Retrieve and remove the next message from the queue.
 
 **Response (204):** No content - queue is empty after timeout
 
-## Deployment
+---
 
-### Deploy Backend to Railway/Render
+## Deployment to Railway (Recommended)
 
-1. Create a new project on [Railway](https://railway.app) or [Render](https://render.com)
-2. Connect your GitHub repository
-3. Set the build command: `npm install && npm run build`
-4. Set the start command: `npm run start`
-5. Set root directory to `packages/backend`
-6. Add environment variables:
-   - `UPSTASH_REDIS_REST_URL`
-   - `UPSTASH_REDIS_REST_TOKEN`
+Railway offers a generous free tier and serves both frontend and backend from the same domain.
 
-### Deploy Frontend to Vercel/Netlify
+### Step 1: Push to GitHub
 
-1. Create a new project on [Vercel](https://vercel.com) or [Netlify](https://netlify.com)
-2. Connect your GitHub repository
-3. Set the build command: `npm run build`
-4. Set the output directory: `dist`
-5. Set root directory to `packages/frontend`
-6. Add environment variable for API URL (create `packages/frontend/.env.production`):
-   ```
-   VITE_API_URL=https://your-backend-url.railway.app
-   ```
+Make sure your code is pushed to a GitHub repository.
 
-For production, update `packages/frontend/src/api.ts` to use the environment variable:
+### Step 2: Create Railway Project
 
-```typescript
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
+1. Go to [railway.app](https://railway.app) and sign in with GitHub
+2. Click **"New Project"** → **"Deploy from GitHub repo"**
+3. Select your `message-queue` repository
+4. Railway will auto-detect the configuration from `railway.json`
+
+### Step 3: Add Environment Variables
+
+In your Railway project dashboard:
+
+1. Click on your service
+2. Go to **"Variables"** tab
+3. Add the following variables:
+
 ```
+UPSTASH_REDIS_REST_URL=https://your-redis-url.upstash.io
+UPSTASH_REDIS_REST_TOKEN=your-token-here
+NODE_ENV=production
+```
+
+### Step 4: Deploy
+
+Railway will automatically build and deploy. Your app will be available at:
+- `https://your-project.up.railway.app`
+
+The frontend and API are served from the same domain - no CORS issues!
+
+### Alternative: Render
+
+1. Go to [render.com](https://render.com) and create a new **Web Service**
+2. Connect your GitHub repository
+3. Set:
+   - **Build Command**: `npm install && npm run build`
+   - **Start Command**: `npm run start`
+4. Add the environment variables (same as Railway)
+
+---
 
 ## Project Structure
 
 ```
 message-queue/
 ├── packages/
-│   ├── shared/           # Shared TypeScript types
+│   ├── shared/              # Shared TypeScript types
+│   │   └── src/index.ts
+│   ├── backend/             # Express API server
 │   │   └── src/
-│   │       └── index.ts  # Type definitions
-│   ├── backend/          # Express API server
-│   │   └── src/
-│   │       ├── index.ts  # Express server
-│   │       └── queue.ts  # Redis queue operations
-│   └── frontend/         # React application
+│   │       ├── index.ts     # Server & static file serving
+│   │       ├── routers/
+│   │       │   └── queue.ts # Queue API routes
+│   │       └── services/
+│   │           └── queue.ts # Redis queue operations
+│   └── frontend/            # React application
 │       └── src/
 │           ├── App.tsx
 │           ├── api.ts
 │           └── components/
-├── package.json          # Root workspace config
+├── package.json             # Monorepo workspace config
+├── railway.json             # Railway deployment config
+├── nixpacks.toml            # Build configuration
 └── README.md
 ```
 
 ## License
 
 MIT
-

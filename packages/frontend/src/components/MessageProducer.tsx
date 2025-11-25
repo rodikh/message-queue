@@ -56,7 +56,7 @@ function MessageProducer() {
     
     try {
       const parsed = JSON.parse(jsonMessage);
-      setJsonMessage(JSON.stringify(parsed, null, 2));
+      setJsonMessage(JSON.stringify(parsed, null, 4));
     } catch {
       toast.error('Cannot format: Invalid JSON');
     }

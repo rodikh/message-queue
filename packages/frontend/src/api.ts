@@ -6,7 +6,7 @@ import {
   DEFAULT_TIMEOUT_MS,
 } from '@message-queue/shared';
 
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
+const API_BASE = import.meta.env.VITE_API_URL || '/api/queue';
 
 export async function postMessage(
   queueName: string,

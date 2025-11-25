@@ -62,9 +62,3 @@ export async function popMessageWithTimeout(
   return await popMessage(queueName);
 }
 
-// Get queue length (useful for debugging)
-export async function getQueueLength(queueName: string): Promise<number> {
-  const queueKey = getQueueKey(queueName);
-  return await redis.llen(queueKey);
-}
-

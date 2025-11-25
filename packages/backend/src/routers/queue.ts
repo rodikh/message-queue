@@ -7,11 +7,11 @@ import {
   DEFAULT_TIMEOUT_MS,
   isValidQueueName,
 } from '@message-queue/shared';
-import { pushMessage, popMessageWithTimeout } from '../queue';
+import { pushMessage, popMessageWithTimeout } from '../services/queue';
 
 const router = Router();
 
-// POST /api/:queueName - Add a message to the queue
+// POST /api/queue/:queueName - Add a message to the queue
 router.post('/:queueName', async (req: Request, res: Response) => {
   try {
     const { queueName } = req.params;
@@ -55,7 +55,7 @@ router.post('/:queueName', async (req: Request, res: Response) => {
   }
 });
 
-// GET /api/:queueName - Retrieve and remove the next message
+// GET /api/queue/:queueName - Retrieve and remove the next message
 router.get('/:queueName', async (req: Request, res: Response) => {
   try {
     const { queueName } = req.params;
