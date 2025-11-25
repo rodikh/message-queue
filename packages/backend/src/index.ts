@@ -2,7 +2,11 @@ import 'dotenv/config';
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import path from 'path';
-import queueRouter from './routers/queue';
+import { fileURLToPath } from 'url';
+import queueRouter from './routers/queue.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;

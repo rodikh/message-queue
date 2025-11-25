@@ -7,7 +7,7 @@ import {
   DEFAULT_TIMEOUT_MS,
   isValidQueueName,
 } from '@message-queue/shared';
-import { pushMessage, popMessageWithTimeout } from '../services/queue';
+import { pushMessage, popMessageWithTimeout } from '../services/queue.js';
 
 const router = Router();
 
