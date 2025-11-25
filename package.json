@@ -1,0 +1,20 @@
+{
+  "name": "message-queue",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd packages/backend && npm run dev",
+    "dev:frontend": "npm run dev -w @message-queue/frontend",
+    "build": "npm run build -w @message-queue/shared && npm run build -w @message-queue/backend && npm run build -w @message-queue/frontend",
+    "start": "npm run start -w @message-queue/backend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "typescript": "^5.3.3"
+  }
+}
+
